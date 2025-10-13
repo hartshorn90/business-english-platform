@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Replace this URL with your Google Apps Script Web App URL
     // Instructions to set this up are in the README.md file
-    const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyZn8VwY1inNTSRh8EnCdEKMfehvh-ZzzrfVw_5tf9KAkTDmRP_FFPLtFgia3PArsa36w/exec';
 
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
