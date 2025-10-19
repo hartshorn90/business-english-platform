@@ -1,124 +1,636 @@
-// ========================================
-// Form Submission Handler
-// ========================================
+/* ========================================
+   CSS Variables & Base Styles
+   ======================================== */
 
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('signupForm');
-    const formMessage = document.getElementById('formMessage');
-    const submitBtn = form.querySelector('.submit-btn');
-    const btnText = submitBtn.querySelector('.btn-text');
-    const btnLoader = submitBtn.querySelector('.btn-loader');
+:root {
+    --primary-blue: #5294e3;
+    --primary-blue-dark: #3a7bc8;
+    --primary-blue-light: #7eb3f0;
+    --light-blue: #e8f4f8;
+    --gradient-start: #f0f9ff;
+    --gradient-end: #e0f2fe;
+    --white: #ffffff;
+    --text-dark: #1a202c;
+    --text-gray: #4a5568;
+    --text-light: #718096;
+    --success: #10b981;
+    --error: #ef4444;
+    --border-radius: 16px;
+    --border-radius-lg: 24px;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.12);
+    --shadow-xl: 0 24px 64px rgba(82, 148, 227, 0.15);
+}
 
-    // Replace this URL with your Google Apps Script Web App URL
-    // Instructions to set this up are in the README.md file
-    const GOOGLE_SCRIPT_URL ='https://script.google.com/macros/s/AKfycbyZn8VwY1inNTSRh8EnCdEKMfehvh-ZzzrfVw_5tf9KAkTDmRP_FFPLtFgia3PArsa36w/exec';
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--white);
+    color: var(--text-dark);
+    line-height: 1.6;
+    overflow-x: hidden;
+    position: relative;
+}
 
-        // Get form data
-        const formData = {
-            firstName: document.getElementById('firstName').value.trim(),
-            lastName: document.getElementById('lastName').value.trim(),
-            email: document.getElementById('email').value.trim(),
-            userType: document.getElementById('userType').value,
-            timestamp: new Date().toISOString()
-        };
+/* ========================================
+   Animated Gradient Background
+   ======================================== */
 
-        // Validate form
-        if (!formData.firstName || !formData.lastName || !formData.email || !formData.userType) {
-            showMessage('Please fill in all fields', 'error');
-            return;
-        }
+.gradient-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0f9ff 100%);
+    background-size: 200% 200%;
+    animation: gradientShift 15s ease infinite;
+    z-index: -2;
+}
 
-        // Show loading state
-        setLoadingState(true);
-        hideMessage();
+@keyframes gradientShift {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
 
-        try {
-            // Check if Google Script URL is configured
-            if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
-                // For demo purposes - simulate success
-                console.log('Form Data:', formData);
-                await simulateDelay(1500);
-                showMessage('Thank you for joining our waitlist! We\'ll be in touch soon.', 'success');
-                form.reset();
-            } else {
-                // Send data to Google Sheets
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData)
-                });
+/* ========================================
+   Animated Blob Shapes
+   ======================================== */
 
-                // Note: With 'no-cors' mode, we can't read the response
-                // So we assume success if no error is thrown
-                showMessage('Thank you for joining our waitlist! We\'ll be in touch soon.', 'success');
-                form.reset();
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            showMessage('Oops! Something went wrong. Please try again.', 'error');
-        } finally {
-            setLoadingState(false);
-        }
-    });
+.blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+    z-index: -1;
+    animation: float 20s ease-in-out infinite;
+}
 
-    // Helper Functions
-    function setLoadingState(isLoading) {
-        submitBtn.disabled = isLoading;
-        if (isLoading) {
-            btnText.style.display = 'none';
-            btnLoader.style.display = 'inline-block';
-        } else {
-            btnText.style.display = 'inline';
-            btnLoader.style.display = 'none';
-        }
+.blob-1 {
+    width: 500px;
+    height: 500px;
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
+    top: -200px;
+    left: -200px;
+    animation-delay: 0s;
+}
+
+.blob-2 {
+    width: 400px;
+    height: 400px;
+    background: linear-gradient(135deg, #7eb3f0 0%, #a5c9f5 100%);
+    top: 50%;
+    right: -150px;
+    animation-delay: 5s;
+}
+
+.blob-3 {
+    width: 350px;
+    height: 350px;
+    background: linear-gradient(135deg, var(--primary-blue-light) 0%, #c4dff9 100%);
+    bottom: -100px;
+    left: 10%;
+    animation-delay: 10s;
+}
+
+.blob-4 {
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(135deg, #5294e3 0%, #7eb3f0 100%);
+    top: 30%;
+    left: 50%;
+    animation-delay: 7s;
+}
+
+.blob-5 {
+    width: 450px;
+    height: 450px;
+    background: linear-gradient(135deg, #a5c9f5 0%, #d4e8fc 100%);
+    bottom: 20%;
+    right: 20%;
+    animation-delay: 3s;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    33% {
+        transform: translate(50px, -50px) scale(1.1);
+    }
+    66% {
+        transform: translate(-30px, 30px) scale(0.9);
+    }
+}
+
+/* ========================================
+   Container & Layout
+   ======================================== */
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 60px 24px;
+    position: relative;
+    z-index: 1;
+}
+
+/* ========================================
+   Hero Section
+   ======================================== */
+
+.hero {
+    text-align: center;
+    margin-bottom: 80px;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
+    color: var(--white);
+    padding: 12px 28px;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 32px;
+    box-shadow: var(--shadow-md);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 8px 24px rgba(82, 148, 227, 0.3);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 12px 32px rgba(82, 148, 227, 0.4);
+    }
+}
+
+.main-heading {
+    font-size: 64px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    color: var(--text-dark);
+    letter-spacing: -0.02em;
+}
+
+.highlight {
+    background: linear-gradient(135deg, #ef4444 0%, #f97316 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+}
+
+.highlight-blue {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+}
+
+.subheading {
+    font-size: 20px;
+    line-height: 1.7;
+    color: var(--text-gray);
+    max-width: 700px;
+    margin: 0 auto;
+    font-weight: 500;
+}
+
+/* ========================================
+   Content Grid
+   ======================================== */
+
+.content-section {
+    margin-bottom: 80px;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+}
+
+.content-left {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ========================================
+   Value Cards
+   ======================================== */
+
+.value-card {
+    background: var(--white);
+    padding: 40px;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.value-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+}
+
+.value-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-blue);
+}
+
+.value-card:hover::before {
+    transform: scaleX(1);
+}
+
+.card-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
+    color: var(--white);
+    box-shadow: 0 8px 16px rgba(82, 148, 227, 0.3);
+}
+
+.teacher-card .card-icon {
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+}
+
+.value-card h3 {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: var(--text-dark);
+}
+
+.card-description {
+    font-size: 16px;
+    color: var(--text-gray);
+    margin-bottom: 24px;
+    font-weight: 500;
+}
+
+.benefits-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.benefits-list li {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--text-gray);
+    padding: 12px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+}
+
+
+
+/* ========================================
+   Signup Card
+   ======================================== */
+
+.signup-card {
+    background: var(--white);
+    padding: 48px;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-xl);
+    position: sticky;
+    top: 40px;
+    border: 2px solid var(--primary-blue);
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.signup-card h3 {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: var(--text-dark);
+}
+
+.form-description {
+    font-size: 16px;
+    color: var(--text-gray);
+    font-weight: 500;
+}
+
+/* ========================================
+   Form Styles
+   ======================================== */
+
+.signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+    letter-spacing: 0.01em;
+}
+
+.form-group input,
+.form-group select {
+    padding: 16px 20px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 16px;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    background: var(--white);
+    color: var(--text-dark);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 4px rgba(82, 148, 227, 0.1);
+    transform: translateY(-2px);
+}
+
+.form-group input::placeholder {
+    color: var(--text-light);
+}
+
+/* ========================================
+   Submit Button
+   ======================================== */
+
+.submit-btn {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+    color: var(--white);
+    padding: 18px 32px;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 24px rgba(82, 148, 227, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.submit-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.submit-btn:hover::before {
+    left: 100%;
+}
+
+.submit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(82, 148, 227, 0.4);
+}
+
+.submit-btn:active {
+    transform: translateY(-1px);
+}
+
+.btn-icon {
+    font-size: 24px;
+    transition: transform 0.3s ease;
+}
+
+.submit-btn:hover .btn-icon {
+    transform: translateX(4px);
+}
+
+.submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ========================================
+   Loading Spinner
+   ======================================== */
+
+.spinner {
+    animation: rotate 1s linear infinite;
+    width: 24px;
+    height: 24px;
+}
+
+.path {
+    stroke: var(--white);
+    stroke-linecap: round;
+    animation: dash 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes dash {
+    0% {
+        stroke-dasharray: 1, 150;
+        stroke-dashoffset: 0;
+    }
+    50% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -35;
+    }
+    100% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -124;
+    }
+}
+
+/* ========================================
+   Form Messages
+   ======================================== */
+
+.form-message {
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    display: none;
+    animation: slideIn 0.3s ease;
+}
+
+.form-message.success {
+    background: #d1fae5;
+    color: #065f46;
+    border: 2px solid #10b981;
+    display: block;
+}
+
+.form-message.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 2px solid #ef4444;
+    display: block;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================================
+   Footer
+   ======================================== */
+
+.footer {
+    text-align: center;
+    padding: 40px 0;
+    color: var(--text-light);
+    font-size: 14px;
+}
+
+/* ========================================
+   Animations
+   ======================================== */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================================
+   Responsive Design
+   ======================================== */
+
+@media (max-width: 1024px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
     }
 
-    function showMessage(message, type) {
-        formMessage.textContent = message;
-        formMessage.className = `form-message ${type}`;
+    .signup-card {
+        position: static;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-heading {
+        font-size: 42px;
     }
 
-    function hideMessage() {
-        formMessage.className = 'form-message';
-        formMessage.textContent = '';
+    .subheading {
+        font-size: 18px;
     }
 
-    function simulateDelay(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+    .value-card {
+        padding: 32px;
     }
 
-    // Email validation on blur
-    const emailInput = document.getElementById('email');
-    emailInput.addEventListener('blur', function() {
-        const email = this.value.trim();
-        if (email && !isValidEmail(email)) {
-            this.style.borderColor = '#ef4444';
-        } else {
-            this.style.borderColor = '#e5e7eb';
-        }
-    });
-
-    function isValidEmail(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
+    .signup-card {
+        padding: 32px 24px;
     }
-});
 
-// ========================================
-// Smooth Scroll Animation for Page Load
-// ========================================
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
 
-window.addEventListener('load', function() {
-    document.body.style.opacity = '0';
-    setTimeout(function() {
-        document.body.style.transition = 'opacity 0.5s ease-in';
-        document.body.style.opacity = '1';
-    }, 100);
-});
+@media (max-width: 480px) {
+    .container {
+        padding: 40px 16px;
+    }
+
+    .main-heading {
+        font-size: 32px;
+    }
+
+    .subheading {
+        font-size: 16px;
+    }
+
+    .signup-card h3 {
+        font-size: 24px;
+    }
+
+    .value-card {
+        padding: 24px;
+    }
+
+    .signup-card {
+        padding: 24px 20px;
+    }
+}
 
